@@ -34,7 +34,7 @@ type update interface {
 // Acts on a resource item, or performs a top level action
 // POST /resource/id/** or POST /resource/top-level-action
 type action interface {
-	Act(http.ResponseWriter, string, *http.Request)
+	Act(http.ResponseWriter, []string, *http.Request)
 }
 
 // DELETE /resource/id
@@ -104,7 +104,13 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 		case "POST":
 			// Action
 			if resVerb, ok := resource.(action); ok {
-				resVerb.Act(c, id, req)
+                parts := strings.Split(id, "/")
+                if parts[0] == "" {
+                    http.Error(c, "invalid uri " + id, http.StatusBadRequest)
+                    return
+                }
+
+				resVerb.Act(c, parts, req)
 			} else {
 				NotImplemented(c)
 			}
