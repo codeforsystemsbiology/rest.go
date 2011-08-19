@@ -31,6 +31,12 @@ type update interface {
 	Update(http.ResponseWriter, string, *http.Request)
 }
 
+// Acts on a resource item, or performs a top level action
+// POST /resource/id/** or POST /resource/top-level-action
+type action interface {
+	Act(http.ResponseWriter, string, *http.Request)
+}
+
 // DELETE /resource/id
 type delete interface {
 	Delete(http.ResponseWriter, string)
@@ -92,6 +98,13 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 			// Find
 			if resFind, ok := resource.(find); ok {
 				resFind.Find(c, id)
+			} else {
+				NotImplemented(c)
+			}
+		case "POST":
+			// Action
+			if resVerb, ok := resource.(action); ok {
+				resVerb.Act(c, id, req)
 			} else {
 				NotImplemented(c)
 			}
