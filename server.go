@@ -37,6 +37,11 @@ type action interface {
 	Act(http.ResponseWriter, []string, *http.Request)
 }
 
+type operations interface {
+	GetOps(http.ResponseWriter)
+	Ops(http.ResponseWriter, string, *http.Request)
+}
+
 // DELETE /resource/id
 type delete interface {
 	Delete(http.ResponseWriter, string)
