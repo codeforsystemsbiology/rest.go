@@ -13,7 +13,7 @@ type Client struct {
 	resource *http.URL
 }
 
-// Creates a client for the specified resource.
+// Creates a client for the specified resource...doesn't work with weekly
 //
 // The resource is the url to the base of the resource (i.e.,
 // http://127.0.0.1:3000/snips/)
