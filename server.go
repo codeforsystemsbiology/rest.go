@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"http"
 	"strings"
+	"url"
 )
 
 var resources = make(map[string]interface{})
@@ -12,6 +13,12 @@ var resources = make(map[string]interface{})
 // GET /resource/
 type index interface {
 	Index(http.ResponseWriter)
+}
+
+// Lists all the items in the resource
+// GET /resource/
+type informed_index interface {
+	Index(http.ResponseWriter, url.Values, http.Header)
 }
 
 // Creates a new resource item
@@ -24,6 +31,12 @@ type create interface {
 // GET /resource/id
 type find interface {
 	Find(http.ResponseWriter, string)
+}
+
+// Views a resource item
+// GET /resource/id
+type informed_find interface {
+	Find(http.ResponseWriter, string, url.Values, http.Header)
 }
 
 // PUT /resource/id
@@ -75,7 +88,13 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 		switch req.Method {
 		case "GET":
 			// Index
-			if resIndex, ok := resource.(index); ok {
+			if resIndex, ok := resource.(informed_index); ok {
+			    if err := req.ParseForm(); err != nil {
+			        BadRequest(c, err.String())
+			        return
+			    }
+                resIndex.Index(c, req.Form, req.Header)
+			} else if resIndex, ok := resource.(index); ok {
 				resIndex.Index(c)
 			} else {
 				NotImplemented(c)
@@ -101,7 +120,13 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 		switch req.Method {
 		case "GET":
 			// Find
-			if resFind, ok := resource.(find); ok {
+			if resFind, ok := resource.(informed_find); ok {
+			    if err := req.ParseForm(); err != nil {
+			        BadRequest(c, err.String())
+			        return
+			    }
+                resFind.Find(c, id, req.Form, req.Header)
+            } else if resFind, ok := resource.(find); ok {
 				resFind.Find(c, id)
 			} else {
 				NotImplemented(c)
