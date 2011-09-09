@@ -3,7 +3,6 @@ package rest
 import (
 	"fmt"
 	"http"
-	"log"
 	"strings"
 	"url"
 )
@@ -183,13 +182,11 @@ func Resource(name string, res interface{}) {
 
 // Registers content type for given resource, e.g. ResourceContentType("foo", "application/json")
 func ResourceContentType(name string, contentType string) {
-    log.Printf("SetResponseContentType(%v,%v)", name, contentType)
 	contentTypes[name] = contentType
 }
 
 func SetResponseContentType(c http.ResponseWriter, resourceName string) {
     if contentType := contentTypes[resourceName]; contentType != "" {
-        log.Printf("SetResponseContentType(%v):%v", resourceName, contentType)
         c.Header().Set("Content-Type", contentType)
     }
 }
