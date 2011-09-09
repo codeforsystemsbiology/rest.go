@@ -3,11 +3,13 @@ package rest
 import (
 	"fmt"
 	"http"
+	"log"
 	"strings"
 	"url"
 )
 
 var resources = make(map[string]interface{})
+var contentTypes = make(map[string]string)
 
 // Lists all the items in the resource
 // GET /resource/
@@ -83,6 +85,8 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 	if !ok {
 		fmt.Fprintf(c, "resource %s not found\n", resourceName)
 	}
+
+    SetResponseContentType(c, resourceName)
 
 	if len(id) == 0 {
 		switch req.Method {
@@ -175,6 +179,19 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 func Resource(name string, res interface{}) {
 	resources[name] = res
 	http.Handle("/"+name+"/", http.HandlerFunc(resourceHandler))
+}
+
+// Registers content type for given resource, e.g. ResourceContentType("foo", "application/json")
+func ResourceContentType(name string, contentType string) {
+    log.Printf("SetResponseContentType(%v,%v)", name, contentType)
+	contentTypes[name] = contentType
+}
+
+func SetResponseContentType(c http.ResponseWriter, resourceName string) {
+    if contentType := contentTypes[resourceName]; contentType != "" {
+        log.Printf("SetResponseContentType(%v):%v", resourceName, contentType)
+        c.Header().Set("Content-Type", contentType)
+    }
 }
 
 // Emits a 404 Not Found
