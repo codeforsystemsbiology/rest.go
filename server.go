@@ -89,11 +89,11 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 		case "GET":
 			// Index
 			if resIndex, ok := resource.(informed_index); ok {
-			    if err := req.ParseForm(); err != nil {
-			        BadRequest(c, err.String())
-			        return
-			    }
-                resIndex.Index(c, req.Form, req.Header)
+				if err := req.ParseForm(); err != nil {
+					BadRequest(c, err.String())
+					return
+				}
+				resIndex.Index(c, req.Form, req.Header)
 			} else if resIndex, ok := resource.(index); ok {
 				resIndex.Index(c)
 			} else {
@@ -121,12 +121,12 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 		case "GET":
 			// Find
 			if resFind, ok := resource.(informed_find); ok {
-			    if err := req.ParseForm(); err != nil {
-			        BadRequest(c, err.String())
-			        return
-			    }
-                resFind.Find(c, id, req.Form, req.Header)
-            } else if resFind, ok := resource.(find); ok {
+				if err := req.ParseForm(); err != nil {
+					BadRequest(c, err.String())
+					return
+				}
+				resFind.Find(c, id, req.Form, req.Header)
+			} else if resFind, ok := resource.(find); ok {
 				resFind.Find(c, id)
 			} else {
 				NotImplemented(c)
@@ -134,11 +134,11 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 		case "POST":
 			// Action
 			if resVerb, ok := resource.(action); ok {
-                parts := strings.Split(id, "/")
-                if parts[0] == "" {
-                    http.Error(c, "invalid uri " + id, http.StatusBadRequest)
-                    return
-                }
+				parts := strings.Split(id, "/")
+				if parts[0] == "" {
+					http.Error(c, "invalid uri "+id, http.StatusBadRequest)
+					return
+				}
 
 				resVerb.Act(c, parts, req)
 			} else {
