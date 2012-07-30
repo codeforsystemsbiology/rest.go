@@ -2,9 +2,9 @@ package rest
 
 import (
 	"fmt"
-	"http"
+	"net/http"
 	"strings"
-	"url"
+	"net/url"
 )
 
 var resources = make(map[string]interface{})
