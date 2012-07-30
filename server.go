@@ -93,7 +93,7 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 			// Index
 			if resIndex, ok := resource.(informed_index); ok {
 				if err := req.ParseForm(); err != nil {
-					BadRequest(c, err.String())
+					BadRequest(c, err.Error())
 					return
 				}
 				resIndex.Index(c, req.Form, req.Header)
@@ -125,7 +125,7 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 			// Find
 			if resFind, ok := resource.(informed_find); ok {
 				if err := req.ParseForm(); err != nil {
-					BadRequest(c, err.String())
+					BadRequest(c, err.Error())
 					return
 				}
 				resFind.Find(c, id, req.Form, req.Header)
