@@ -3,8 +3,8 @@ package rest
 import (
 	"fmt"
 	"net/http"
-	"strings"
 	"net/url"
+	"strings"
 )
 
 var resources = make(map[string]interface{})
@@ -85,7 +85,7 @@ func resourceHandler(c http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(c, "resource %s not found\n", resourceName)
 	}
 
-    SetResponseContentType(c, resourceName)
+	SetResponseContentType(c, resourceName)
 
 	if len(id) == 0 {
 		switch req.Method {
@@ -186,9 +186,9 @@ func ResourceContentType(name string, contentType string) {
 }
 
 func SetResponseContentType(c http.ResponseWriter, resourceName string) {
-    if contentType := contentTypes[resourceName]; contentType != "" {
-        c.Header().Set("Content-Type", contentType)
-    }
+	if contentType := contentTypes[resourceName]; contentType != "" {
+		c.Header().Set("Content-Type", contentType)
+	}
 }
 
 // Emits a 404 Not Found
