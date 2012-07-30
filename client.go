@@ -2,11 +2,11 @@ package rest
 
 import (
 	"bytes"
-	"http"
+	"net/http"
 	"io"
 	"net"
 	"os"
-	"url"
+	"net/url"
 )
 
 type Client struct {
